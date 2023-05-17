@@ -22,16 +22,15 @@ public class MainGrafo2 {
         GrafoIterator iterator;
 
         System.out.println("BFS");
-        iterator = g.BFSIterator("6");
+        iterator = g.BFSIterator("4");
         while (iterator.hasNext()){
             System.out.println(iterator.next());
         }
 
         System.out.println("DFS");
-        iterator = g.DFSIterator("6");
+        iterator = g.DFSIterator("4");
         while (iterator.hasNext()){
             System.out.println(iterator.next());
         }
     }
-
 }
