@@ -9,11 +9,12 @@ import java.util.*;
 public class DFSIterator<T> implements GrafoIterator {
 
     private final List<Vertice<T>> vertices;
-    private final Queue<Vertice<T>> fila;
+    private final Deque<Vertice<T>> fila;
+    private Vertice<T> raiz;
 
     public DFSIterator(List<Vertice<T>> vertices, T carga) {
         this.vertices = vertices;
-        this.fila = new LinkedList<>();
+        this.fila = new ArrayDeque<>();
         this.DFS(carga);
     }
 
@@ -23,12 +24,21 @@ public class DFSIterator<T> implements GrafoIterator {
     }
 
     @Override
-    public Vertice<T> next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        return fila.remove();
-    }
+	public Object next() {
+		if (!hasNext()) {
+			throw new IllegalStateException("A lista esta vazia");
+		}
+		raiz = fila.pollLast();
+		return raiz;
+	}
+
+    // @Override
+    // public Vertice<T> next() {
+    //     if (!hasNext()) {
+    //         throw new NoSuchElementException();
+    //     }
+    //     return fila.remove();
+    // }
 
     public Vertice<T> getVertice(T carga){
         for (Vertice<T> u : vertices) {
@@ -45,34 +55,37 @@ public class DFSIterator<T> implements GrafoIterator {
     }
 
     public void DFS(T source) {
-        Vertice<T> u;
+        Vertice<T> u = null;
 
         if ((u = getVertice(source)) == null) {
             System.err.println("vertice nao encontrado em runDFS()");
             return;
         }
 
-        for (Vertice<T> vertex : vertices) {
-            vertex.setStatus(VertexState.Unvisited);
-        }
-
-        runDFS(u);
+        for (int i=0; i < vertices.size(); i++ ){
+			vertices.get(i).setStatus(VertexState.Unvisited);
+		}
+		
+		runDFS( u );	
     }
 
     private void runDFS(Vertice<T> u) {
-        Vertice<T> w;
-        List<Aresta<T>> uAdjacentes;
+        Vertice<T> w = null;
+        List<Aresta<T>> uAdjacentes = null;
 
         u.setStatus(VertexState.Visited);
-        uAdjacentes = u.getAdj();
-
-        for (Aresta<T> arco: uAdjacentes) {
-            w = arco.getDestino();
-            if (w.getStatus() == VertexState.Unvisited)
-                runDFS(w);
-        }
-        adicionarNaFila(u);
-        u.setStatus(VertexState.Finished);
+		
+		uAdjacentes = u.getAdj();
+			
+		for(Aresta<T> arco: uAdjacentes){
+			w = (Vertice<T>) arco.getDestino();
+			
+			if( w.getStatus() == VertexState.Unvisited )							
+				runDFS(w);							
+		} 
+		
+		u.setStatus(VertexState.Finished);
+		adicionarNaFila(u);
     }
 
 }

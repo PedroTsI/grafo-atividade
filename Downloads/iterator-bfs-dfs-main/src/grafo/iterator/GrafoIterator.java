@@ -1,8 +1,8 @@
 package grafo.iterator;
 
-public interface GrafoIterator<E> {
+public interface GrafoIterator<T> {
 
     boolean hasNext();
-    E next();
+    T next();
 
 }
